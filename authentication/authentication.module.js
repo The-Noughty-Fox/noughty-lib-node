@@ -7,6 +7,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var AuthenticationModule_1;
 import { Module } from "@nestjs/common";
 import { AuthenticationCoreModule } from "./authentication.core.module";
+class SIWAMiddleware {
+    use(req, res, next) {
+        const body = req.body;
+        body.code = body.authorizationCode;
+        next();
+    }
+}
 let AuthenticationModule = AuthenticationModule_1 = class AuthenticationModule {
     static forRootAsync(options) {
         return {
@@ -15,6 +22,11 @@ let AuthenticationModule = AuthenticationModule_1 = class AuthenticationModule {
                 AuthenticationCoreModule.forRootAsync(options)
             ]
         };
+    }
+    configure(consumer) {
+        consumer
+            .apply(SIWAMiddleware)
+            .forRoutes('apple/auth');
     }
 };
 AuthenticationModule = AuthenticationModule_1 = __decorate([

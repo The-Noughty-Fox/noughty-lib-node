@@ -28,10 +28,7 @@ let AuthenticationController = class AuthenticationController {
     // @UseGuards(AppleAuthenticationGuard)
     authenticateTest(req) {
         return __awaiter(this, void 0, void 0, function* () {
-            req.session = {
-                "token": "123456",
-                "userId": 1
-            };
+            req.session = { id: 1 };
             return req.session;
         });
     }

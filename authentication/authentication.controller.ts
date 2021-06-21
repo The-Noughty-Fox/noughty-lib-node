@@ -21,10 +21,7 @@ export class AuthenticationController<User> {
     @UsePipes()
     @Post('apple_test')
     async authenticateTest(@Req() req): Promise<User> {
-        req.session = {
-            "token": "123456",
-            "userId": 1
-        }
+        req.session = { id: 1 }
         return req.session
     }
 }
