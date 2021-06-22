@@ -13,7 +13,7 @@ export class AuthenticationController<User> {
     @UsePipes()
     @Post('apple')
     async authenticate(@Req() req): Promise<User> {
-        req.session = { id: req.user.id }
+        req.session = { userId: req.user.id }
         return req.user
     }
 
@@ -21,7 +21,7 @@ export class AuthenticationController<User> {
     @UsePipes()
     @Post('apple_test')
     async authenticateTest(@Req() req): Promise<User> {
-        req.session = { id: 1 }
+        req.session = { userId: 1 }
         return req.session
     }
 }

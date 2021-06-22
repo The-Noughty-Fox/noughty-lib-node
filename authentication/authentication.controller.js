@@ -21,14 +21,14 @@ import { AppleAuthenticationGuard } from "./apple/apple.authentication.guard";
 let AuthenticationController = class AuthenticationController {
     authenticate(req) {
         return __awaiter(this, void 0, void 0, function* () {
-            req.session = { id: req.user.id };
+            req.session = { userId: req.user.id };
             return req.user;
         });
     }
     // @UseGuards(AppleAuthenticationGuard)
     authenticateTest(req) {
         return __awaiter(this, void 0, void 0, function* () {
-            req.session = { id: 1 };
+            req.session = { userId: 1 };
             return req.session;
         });
     }
