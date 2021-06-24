@@ -33,7 +33,6 @@ let AppleAuthenticationStrategy = class AppleAuthenticationStrategy extends Pass
         dto.email = email;
         dto.apple_token = id;
         dto.username = (userInfo === null || userInfo === void 0 ? void 0 : userInfo.name.given) || 'Unknown';
-        dto.color = '#C3C3C3';
         return this.authParams.userService.create(dto);
     }
 };
