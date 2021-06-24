@@ -33,7 +33,6 @@ export class AppleAuthenticationStrategy extends PassportStrategy(AppleStrategy.
         dto.email = email;
         dto.apple_token = id;
         dto.username = userInfo?.name.given || 'Unknown';
-        dto.color = '#C3C3C3'
 
         return this.authParams.userService.create(dto);
     }
