@@ -14,7 +14,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var AuthenticationParamsModule_1, AuthenticationCoreModule_1;
-import { Module, RequestMethod } from "@nestjs/common";
+import { Module } from "@nestjs/common";
 import { AuthenticationController } from "./authentication.controller";
 import { InjectableToken } from "../injectable.token";
 import { PassportModule } from "@nestjs/passport";
@@ -61,10 +61,7 @@ let AuthenticationCoreModule = AuthenticationCoreModule_1 = class Authentication
                     inject: [InjectableToken.AUTH_PARAMS],
                     useFactory: (authParams) => __awaiter(this, void 0, void 0, function* () {
                         return {
-                            session: { secret: authParams.secret },
-                            exclude: [
-                                { path: 'auth/apple', method: RequestMethod.POST }
-                            ]
+                            session: { secret: authParams.secret }
                         };
                     })
                 })

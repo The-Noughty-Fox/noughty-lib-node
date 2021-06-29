@@ -50,10 +50,7 @@ export class AuthenticationCoreModule {
                     inject: [InjectableToken.AUTH_PARAMS],
                     useFactory: async (authParams: AuthenticationParams): Promise<NestCookieSessionOptions> => {
                         return {
-                            session: { secret: authParams.secret },
-                            exclude: [
-                                { path: 'auth/apple', method: RequestMethod.POST }
-                            ]
+                            session: { secret: authParams.secret }
                         }
                     }
                 })
