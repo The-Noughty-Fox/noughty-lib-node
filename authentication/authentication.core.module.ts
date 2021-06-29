@@ -1,4 +1,4 @@
-import {DynamicModule, Module, RequestMethod} from "@nestjs/common";
+import {DynamicModule, MiddlewareConsumer, Module, NestMiddleware, RequestMethod} from "@nestjs/common";
 import {AuthenticationController} from "./authentication.controller";
 import {InjectableToken} from "../injectable.token";
 import {PassportModule} from "@nestjs/passport";
@@ -6,10 +6,18 @@ import {CookieSessionModule, NestCookieSessionOptions} from "nestjs-cookie-sessi
 import {AppleAuthenticationStrategy} from "./apple/apple.authentication.strategy";
 import {CookiesStrategy} from "./authentication.guard";
 import {AuthenticationOptions, AuthenticationParams} from "./authentication.module";
+import {Request, Response, NextFunction} from "express";
+import {AppleAuthenticationGuard} from "./apple/apple.authentication.guard";
 
-@Module({
+class SIWAMiddleware implements NestMiddleware {
+    use(req: Request, res: Response, next: NextFunction) {
+        const body = req.body as any;
+        body.code = body.authorizationCode;
+        next();
+    }
+}
 
-})
+@Module({})
 export class AuthenticationParamsModule {
     static forRootAsync(options: AuthenticationOptions): DynamicModule {
         const authParamsProvider = {
@@ -44,7 +52,7 @@ export class AuthenticationCoreModule {
                         return {
                             session: { secret: authParams.secret },
                             exclude: [
-                                { path: 'apple/auth', method: RequestMethod.POST }
+                                { path: 'auth/apple', method: RequestMethod.POST }
                             ]
                         }
                     }
@@ -52,8 +60,15 @@ export class AuthenticationCoreModule {
             ],
             providers: [
                 AppleAuthenticationStrategy,
+                AppleAuthenticationGuard,
                 CookiesStrategy
             ],
         }
+    }
+
+    configure(consumer: MiddlewareConsumer) {
+        consumer
+            .apply(SIWAMiddleware)
+            .forRoutes('auth/apple')
     }
 }

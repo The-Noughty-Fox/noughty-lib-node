@@ -22,8 +22,11 @@ export class AuthenticationController<User> {
     @UsePipes()
     @Post('apple')
     async authenticate(@Req() req): Promise<User> {
-        req.session = { userId: req.user.id }
-        return req.user
+        if (req.user && req.user.id) {
+            req.session = { userId: req.user.id }
+            return req.user
+        }
+        return Promise.reject('Authentication failed')
     }
 
     // @UseGuards(AppleAuthenticationGuard)

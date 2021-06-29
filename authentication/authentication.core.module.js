@@ -21,6 +21,14 @@ import { PassportModule } from "@nestjs/passport";
 import { CookieSessionModule } from "nestjs-cookie-session";
 import { AppleAuthenticationStrategy } from "./apple/apple.authentication.strategy";
 import { CookiesStrategy } from "./authentication.guard";
+import { AppleAuthenticationGuard } from "./apple/apple.authentication.guard";
+class SIWAMiddleware {
+    use(req, res, next) {
+        const body = req.body;
+        body.code = body.authorizationCode;
+        next();
+    }
+}
 let AuthenticationParamsModule = AuthenticationParamsModule_1 = class AuthenticationParamsModule {
     static forRootAsync(options) {
         const authParamsProvider = {
@@ -55,7 +63,7 @@ let AuthenticationCoreModule = AuthenticationCoreModule_1 = class Authentication
                         return {
                             session: { secret: authParams.secret },
                             exclude: [
-                                { path: 'apple/auth', method: RequestMethod.POST }
+                                { path: 'auth/apple', method: RequestMethod.POST }
                             ]
                         };
                     })
@@ -63,9 +71,15 @@ let AuthenticationCoreModule = AuthenticationCoreModule_1 = class Authentication
             ],
             providers: [
                 AppleAuthenticationStrategy,
+                AppleAuthenticationGuard,
                 CookiesStrategy
             ],
         };
+    }
+    configure(consumer) {
+        consumer
+            .apply(SIWAMiddleware)
+            .forRoutes('auth/apple');
     }
 };
 AuthenticationCoreModule = AuthenticationCoreModule_1 = __decorate([

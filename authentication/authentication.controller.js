@@ -26,8 +26,11 @@ let AuthenticationController = class AuthenticationController {
     }
     authenticate(req) {
         return __awaiter(this, void 0, void 0, function* () {
-            req.session = { userId: req.user.id };
-            return req.user;
+            if (req.user && req.user.id) {
+                req.session = { userId: req.user.id };
+                return req.user;
+            }
+            return Promise.reject('Authentication failed');
         });
     }
     // @UseGuards(AppleAuthenticationGuard)

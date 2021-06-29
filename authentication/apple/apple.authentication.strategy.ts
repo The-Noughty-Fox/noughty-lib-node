@@ -9,6 +9,7 @@ import {
 } from "../dto/appleauthentication.dto";
 import {AuthenticationParams} from "../authentication.module";
 
+
 @Injectable()
 export class AppleAuthenticationStrategy extends PassportStrategy(AppleStrategy.Strategy) {
 
