@@ -16,7 +16,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { Controller, Post, UseGuards, UsePipes, Req, Inject } from "@nestjs/common";
+import { Controller, Post, UseGuards, Req, Inject, Param, ParseIntPipe } from "@nestjs/common";
 import { AppleAuthenticationGuard } from "./apple/apple.authentication.guard";
 import { InjectableToken } from "../injectable.token";
 import { CreateUserDto } from "./dto/createuser.dto";
@@ -33,7 +33,11 @@ let AuthenticationController = class AuthenticationController {
             return Promise.reject('Authentication failed');
         });
     }
-    // @UseGuards(AppleAuthenticationGuard)
+    loginTest(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.authParams.userService.findById(id);
+        });
+    }
     authenticateTest(req) {
         return __awaiter(this, void 0, void 0, function* () {
             const dto = new CreateUserDto();
@@ -42,19 +46,21 @@ let AuthenticationController = class AuthenticationController {
             dto.username = `Noughty_Tester_${now}`;
             const user = yield this.authParams.userService.create(dto);
             req.session = { userId: user.id };
-            return req.session;
+            return user;
         });
     }
 };
 __decorate([
     UseGuards(AppleAuthenticationGuard),
-    UsePipes(),
     Post('apple'),
     __param(0, Req())
 ], AuthenticationController.prototype, "authenticate", null);
 __decorate([
-    UsePipes(),
-    Post('apple_test'),
+    Post('test/:id'),
+    __param(0, Param('id', ParseIntPipe))
+], AuthenticationController.prototype, "loginTest", null);
+__decorate([
+    Post('test'),
     __param(0, Req())
 ], AuthenticationController.prototype, "authenticateTest", null);
 AuthenticationController = __decorate([

@@ -3,7 +3,7 @@ import {
     Post,
     UseGuards,
     UsePipes,
-    Req, Inject
+    Req, Inject, Param, ParseIntPipe
 } from "@nestjs/common";
 import {AppleAuthenticationGuard} from "./apple/apple.authentication.guard";
 import {InjectableToken} from "../injectable.token";
@@ -19,7 +19,6 @@ export class AuthenticationController<User> {
     ) {}
 
     @UseGuards(AppleAuthenticationGuard)
-    @UsePipes()
     @Post('apple')
     async authenticate(@Req() req): Promise<User> {
         if (req.user && req.user.id) {
@@ -29,9 +28,12 @@ export class AuthenticationController<User> {
         return Promise.reject('Authentication failed')
     }
 
-    // @UseGuards(AppleAuthenticationGuard)
-    @UsePipes()
-    @Post('apple_test')
+    @Post('test/:id')
+    async loginTest(@Param('id', ParseIntPipe) id: number): Promise<User> {
+        return this.authParams.userService.findById(id)
+    }
+
+    @Post('test')
     async authenticateTest(@Req() req): Promise<User> {
         const dto = new CreateUserDto()
         const now = Date.now().toString()
@@ -39,6 +41,6 @@ export class AuthenticationController<User> {
         dto.username = `Noughty_Tester_${now}`
         const user = await this.authParams.userService.create(dto)
         req.session = { userId: user.id }
-        return req.session
+        return user
     }
 }
