@@ -33,9 +33,12 @@ let AuthenticationController = class AuthenticationController {
             return Promise.reject('Authentication failed');
         });
     }
-    loginTest(id) {
+    loginTest(req, id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.authParams.userService.findById(id);
+            const user = yield this.authParams.userService.findById(id);
+            if (user)
+                req.session = { userId: id };
+            return user;
         });
     }
     authenticateTest(req) {
@@ -57,7 +60,7 @@ __decorate([
 ], AuthenticationController.prototype, "authenticate", null);
 __decorate([
     Post('test/:id'),
-    __param(0, Param('id', ParseIntPipe))
+    __param(0, Req()), __param(1, Param('id', ParseIntPipe))
 ], AuthenticationController.prototype, "loginTest", null);
 __decorate([
     Post('test'),

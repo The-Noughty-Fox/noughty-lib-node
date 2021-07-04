@@ -29,8 +29,10 @@ export class AuthenticationController<User> {
     }
 
     @Post('test/:id')
-    async loginTest(@Param('id', ParseIntPipe) id: number): Promise<User> {
-        return this.authParams.userService.findById(id)
+    async loginTest(@Req() req, @Param('id', ParseIntPipe) id: number): Promise<User> {
+        const user = await this.authParams.userService.findById(id)
+        if (user) req.session = { userId: id }
+        return user
     }
 
     @Post('test')
