@@ -61,7 +61,10 @@ let AuthenticationCoreModule = AuthenticationCoreModule_1 = class Authentication
                     inject: [InjectableToken.AUTH_PARAMS],
                     useFactory: (authParams) => __awaiter(this, void 0, void 0, function* () {
                         return {
-                            session: { secret: authParams.secret }
+                            session: {
+                                secret: authParams.secret,
+                                maxAge: 1000 * 3600 * 24 * 365
+                            }
                         };
                     })
                 })

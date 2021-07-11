@@ -50,7 +50,10 @@ export class AuthenticationCoreModule {
                     inject: [InjectableToken.AUTH_PARAMS],
                     useFactory: async (authParams: AuthenticationParams): Promise<NestCookieSessionOptions> => {
                         return {
-                            session: { secret: authParams.secret }
+                            session: {
+                                secret: authParams.secret,
+                                maxAge: 1000 * 3600 * 24 * 365
+                            }
                         }
                     }
                 })
