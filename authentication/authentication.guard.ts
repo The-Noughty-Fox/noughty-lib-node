@@ -2,7 +2,6 @@ import {AuthGuard, PassportStrategy} from "@nestjs/passport";
 import {Inject, Injectable, UnauthorizedException} from "@nestjs/common";
 import {Request} from "express";
 import {Strategy} from 'passport-custom';
-import {UserDbInterface} from "./injectables/userdb.interface";
 import {InjectableToken} from "../injectable.token";
 import {AuthenticationParams} from "./authentication.module";
 

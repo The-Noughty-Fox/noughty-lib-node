@@ -23,7 +23,7 @@ export class AuthenticationController<User> {
     async authenticate(@Req() req): Promise<User> {
         if (req.user && req.user.id) {
             req.session = { userId: req.user.id }
-            return req.user
+            return this.authParams.userService.map(req.user)
         }
         return Promise.reject('Authentication failed')
     }
@@ -32,7 +32,7 @@ export class AuthenticationController<User> {
     async loginTest(@Req() req, @Param('id', ParseIntPipe) id: number): Promise<User> {
         const user = await this.authParams.userService.findById(id)
         if (user) req.session = { userId: id }
-        return user
+        return user ? this.authParams.userService.map(user) : user
     }
 
     @Post('test')
@@ -43,6 +43,6 @@ export class AuthenticationController<User> {
         dto.username = `Noughty_Tester_${now}`
         const user = await this.authParams.userService.create(dto)
         req.session = { userId: user.id }
-        return user
+        return this.authParams.userService.map(user)
     }
 }
