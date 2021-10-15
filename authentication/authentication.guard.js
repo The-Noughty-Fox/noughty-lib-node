@@ -17,7 +17,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { AuthGuard, PassportStrategy } from "@nestjs/passport";
-import { Inject, Injectable, UnauthorizedException } from "@nestjs/common";
+import { ForbiddenException, Inject, Injectable, UnauthorizedException } from "@nestjs/common";
 import { Strategy } from 'passport-custom';
 import { InjectableToken } from "../injectable.token";
 let CookiesStrategy = class CookiesStrategy extends PassportStrategy(Strategy, 'cookies') {
@@ -44,4 +44,16 @@ AuthenticationGuard = __decorate([
     Injectable()
 ], AuthenticationGuard);
 export { AuthenticationGuard };
+let SignedUpGuard = class SignedUpGuard extends AuthenticationGuard {
+    handleRequest(err, u, info, context, status) {
+        const user = super.handleRequest(err, u, info, context, status);
+        if (!(user === null || user === void 0 ? void 0 : user.email))
+            throw new ForbiddenException("Anonymous users can't access resource");
+        return user;
+    }
+};
+SignedUpGuard = __decorate([
+    Injectable()
+], SignedUpGuard);
+export { SignedUpGuard };
 //# sourceMappingURL=authentication.guard.js.map

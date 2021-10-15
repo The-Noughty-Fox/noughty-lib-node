@@ -1,5 +1,5 @@
 import {AuthGuard, PassportStrategy} from "@nestjs/passport";
-import {Inject, Injectable, UnauthorizedException} from "@nestjs/common";
+import {ExecutionContext, ForbiddenException, Inject, Injectable, UnauthorizedException} from "@nestjs/common";
 import {Request} from "express";
 import {Strategy} from 'passport-custom';
 import {InjectableToken} from "../injectable.token";
@@ -20,3 +20,12 @@ export class CookiesStrategy extends PassportStrategy(Strategy, 'cookies') {
 
 @Injectable()
 export class AuthenticationGuard extends AuthGuard('cookies') {}
+
+@Injectable()
+export class SignedUpGuard extends AuthenticationGuard {
+    handleRequest<T>(err, u, info, context, status): T {
+        const user = super.handleRequest(err, u, info, context, status)
+        if (!user?.email) throw new ForbiddenException("Anonymous users can't access resource")
+        return user
+    }
+}
