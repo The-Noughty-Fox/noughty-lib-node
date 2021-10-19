@@ -44,7 +44,7 @@ AuthenticationGuard = __decorate([
     Injectable()
 ], AuthenticationGuard);
 export { AuthenticationGuard };
-let SignedUpGuard = class SignedUpGuard extends AuthenticationGuard {
+let SignedUpGuard = class SignedUpGuard extends AuthGuard('cookies') {
     handleRequest(err, u, info, context, status) {
         const user = super.handleRequest(err, u, info, context, status);
         if (!(user === null || user === void 0 ? void 0 : user.email))

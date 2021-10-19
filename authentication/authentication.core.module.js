@@ -14,14 +14,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var AuthenticationParamsModule_1, AuthenticationCoreModule_1;
-import { Module } from "@nestjs/common";
+import { Global, Module } from "@nestjs/common";
 import { AuthenticationController } from "./authentication.controller";
 import { InjectableToken } from "../injectable.token";
 import { PassportModule } from "@nestjs/passport";
 import { CookieSessionModule } from "nestjs-cookie-session";
 import { AppleAuthenticationStrategy } from "./apple/apple.authentication.strategy";
 import { CookiesStrategy } from "./authentication.guard";
-import { AppleAuthenticationGuard } from "./apple/apple.authentication.guard";
+import { AnonymousAppleAuthenticationGuard } from "./apple/apple.authentication.guard";
+import { AppleAuthenticationModule } from "./apple/apple.authentication.module";
 class SIWAMiddleware {
     use(req, res, next) {
         const body = req.body;
@@ -45,6 +46,7 @@ let AuthenticationParamsModule = AuthenticationParamsModule_1 = class Authentica
     }
 };
 AuthenticationParamsModule = AuthenticationParamsModule_1 = __decorate([
+    Global(),
     Module({})
 ], AuthenticationParamsModule);
 export { AuthenticationParamsModule };
@@ -55,6 +57,7 @@ let AuthenticationCoreModule = AuthenticationCoreModule_1 = class Authentication
             imports: [
                 ...options.imports,
                 AuthenticationParamsModule.forRootAsync(options),
+                AppleAuthenticationModule,
                 PassportModule.register({ session: true }),
                 CookieSessionModule.forRootAsync({
                     imports: [AuthenticationParamsModule.forRootAsync(options)],
@@ -71,9 +74,9 @@ let AuthenticationCoreModule = AuthenticationCoreModule_1 = class Authentication
             ],
             providers: [
                 AppleAuthenticationStrategy,
-                AppleAuthenticationGuard,
+                AnonymousAppleAuthenticationGuard,
                 CookiesStrategy
-            ],
+            ]
         };
     }
     configure(consumer) {

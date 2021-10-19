@@ -5,4 +5,5 @@ export interface IUserService {
     findByAppleToken(token: string): Promise<any>
     create(dto: CreateUserDto): Promise<any>
     map(user: any): any
+    link(oldUser: any, newUser: any): Promise<any>
 }

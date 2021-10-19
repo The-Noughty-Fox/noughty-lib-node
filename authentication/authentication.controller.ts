@@ -5,7 +5,7 @@ import {
     UsePipes,
     Req, Inject, Param, ParseIntPipe, BadRequestException
 } from "@nestjs/common";
-import {AppleAuthenticationGuard} from "./apple/apple.authentication.guard";
+import {AnonymousAppleAuthenticationGuard} from "./apple/apple.authentication.guard";
 import {InjectableToken} from "../injectable.token";
 import {AuthenticationParams} from "./authentication.module";
 import {CreateUserDto} from "./dto/createuser.dto";
@@ -18,7 +18,7 @@ export class AuthenticationController<User> {
         private authParams: AuthenticationParams
     ) {}
 
-    @UseGuards(AppleAuthenticationGuard)
+    @UseGuards(AnonymousAppleAuthenticationGuard)
     @Post('apple')
     async authenticate(@Req() req): Promise<User> {
         if (req.user && req.user.id) {

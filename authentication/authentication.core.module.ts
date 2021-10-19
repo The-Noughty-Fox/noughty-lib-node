@@ -1,13 +1,14 @@
-import {DynamicModule, MiddlewareConsumer, Module, NestMiddleware, RequestMethod} from "@nestjs/common";
+import {DynamicModule, Global, MiddlewareConsumer, Module, NestMiddleware, RequestMethod} from "@nestjs/common";
 import {AuthenticationController} from "./authentication.controller";
 import {InjectableToken} from "../injectable.token";
 import {PassportModule} from "@nestjs/passport";
 import {CookieSessionModule, NestCookieSessionOptions} from "nestjs-cookie-session";
 import {AppleAuthenticationStrategy} from "./apple/apple.authentication.strategy";
-import {CookiesStrategy} from "./authentication.guard";
+import {AuthenticationGuard, CookiesStrategy} from "./authentication.guard";
 import {AuthenticationOptions, AuthenticationParams} from "./authentication.module";
 import {Request, Response, NextFunction} from "express";
-import {AppleAuthenticationGuard} from "./apple/apple.authentication.guard";
+import {AnonymousAppleAuthenticationGuard, AppleAuthenticationGuard} from "./apple/apple.authentication.guard";
+import {AppleAuthenticationModule} from "./apple/apple.authentication.module";
 
 class SIWAMiddleware implements NestMiddleware {
     use(req: Request, res: Response, next: NextFunction) {
@@ -17,6 +18,7 @@ class SIWAMiddleware implements NestMiddleware {
     }
 }
 
+@Global()
 @Module({})
 export class AuthenticationParamsModule {
     static forRootAsync(options: AuthenticationOptions): DynamicModule {
@@ -44,6 +46,7 @@ export class AuthenticationCoreModule {
             imports: [
                 ...options.imports,
                 AuthenticationParamsModule.forRootAsync(options),
+                AppleAuthenticationModule,
                 PassportModule.register({ session: true }),
                 CookieSessionModule.forRootAsync({
                     imports: [AuthenticationParamsModule.forRootAsync(options)],
@@ -60,9 +63,9 @@ export class AuthenticationCoreModule {
             ],
             providers: [
                 AppleAuthenticationStrategy,
-                AppleAuthenticationGuard,
+                AnonymousAppleAuthenticationGuard,
                 CookiesStrategy
-            ],
+            ]
         }
     }
 

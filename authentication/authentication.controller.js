@@ -17,7 +17,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { Controller, Post, UseGuards, Req, Inject, Param, ParseIntPipe, BadRequestException } from "@nestjs/common";
-import { AppleAuthenticationGuard } from "./apple/apple.authentication.guard";
+import { AnonymousAppleAuthenticationGuard } from "./apple/apple.authentication.guard";
 import { InjectableToken } from "../injectable.token";
 import { CreateUserDto } from "./dto/createuser.dto";
 let AuthenticationController = class AuthenticationController {
@@ -54,7 +54,7 @@ let AuthenticationController = class AuthenticationController {
     }
 };
 __decorate([
-    UseGuards(AppleAuthenticationGuard),
+    UseGuards(AnonymousAppleAuthenticationGuard),
     Post('apple'),
     __param(0, Req())
 ], AuthenticationController.prototype, "authenticate", null);
