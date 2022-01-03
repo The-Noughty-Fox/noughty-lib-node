@@ -17,33 +17,34 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { Inject, Injectable } from "@nestjs/common";
-import { PassportStrategy } from "@nestjs/passport";
-import * as AppleStrategy from "@nicokaiser/passport-apple";
 import { InjectableToken } from "../../injectable.token";
-let AppleAuthenticationStrategy = class AppleAuthenticationStrategy extends PassportStrategy(AppleStrategy.Strategy) {
+import { OAuth2Client } from "google-auth-library";
+let GoogleAuthenticationGuard = class GoogleAuthenticationGuard {
     constructor(authParams) {
-        super(Object.assign(Object.assign({}, authParams.appleConfig), { passReqToCallback: true }));
         this.authParams = authParams;
+        this.client = new OAuth2Client(authParams.googleConfig.clientID);
     }
-    validate(req, accessToken, refreshToken, profile) {
-        var _a;
+    canActivate(context) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id, email } = profile;
-            if (!id)
-                return Promise.reject("Apple jwt token does not contain the 'sub' field.");
-            return (yield this.authParams.userService.findByAppleToken(id))
+            const req = context.switchToHttp().getRequest();
+            const { token } = req.body;
+            if (!token)
+                return Promise.reject(`Google authentication requires 'token' be sent in body`);
+            const ticket = yield this.client.verifyIdToken({
+                idToken: token,
+                audience: this.authParams.googleConfig.audience
+            });
+            const { given_name: name, sub: id, email } = ticket.getPayload();
+            req.user = (yield this.authParams.userService.findByGoogleToken(id))
                 || (yield this.authParams.userService.findByEmail(email))
-                || (yield this.authParams.userService.create({
-                    email,
-                    username: ((_a = req.body) === null || _a === void 0 ? void 0 : _a.name.given) || 'Unknown',
-                    apple_token: id,
-                }));
+                || (yield this.authParams.userService.create({ email, username: name, google_token: id }));
+            return true;
         });
     }
 };
-AppleAuthenticationStrategy = __decorate([
+GoogleAuthenticationGuard = __decorate([
     Injectable(),
     __param(0, Inject(InjectableToken.AUTH_PARAMS))
-], AppleAuthenticationStrategy);
-export { AppleAuthenticationStrategy };
-//# sourceMappingURL=apple.authentication.strategy.js.map
+], GoogleAuthenticationGuard);
+export { GoogleAuthenticationGuard };
+//# sourceMappingURL=google.authentication.guard.js.map

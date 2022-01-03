@@ -1,3 +1,2 @@
-export class CreateUserDto {
-}
+export {};
 //# sourceMappingURL=createuser.dto.js.map

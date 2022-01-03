@@ -9,6 +9,7 @@ import {AnonymousAppleAuthenticationGuard} from "./apple/apple.authentication.gu
 import {InjectableToken} from "../injectable.token";
 import {AuthenticationParams} from "./authentication.module";
 import {CreateUserDto} from "./dto/createuser.dto";
+import {GoogleAuthenticationGuard} from "./google/google.authentication.guard";
 
 @Controller('auth')
 export class AuthenticationController<User> {
@@ -20,12 +21,22 @@ export class AuthenticationController<User> {
 
     @UseGuards(AnonymousAppleAuthenticationGuard)
     @Post('apple')
-    async authenticate(@Req() req): Promise<User> {
+    async authenticateApple(@Req() req): Promise<User> {
         if (req.user && req.user.id) {
             req.session = { userId: req.user.id }
             return this.authParams.userService.map(req.user)
         }
-        return Promise.reject('Authentication failed')
+        return Promise.reject('Apple authentication failed')
+    }
+
+    @UseGuards(GoogleAuthenticationGuard)
+    @Post('google')
+    async authenticateGoogle(@Req() req): Promise<User> {
+        if (req.user?.id) {
+            req.session = { userId: req.user.id }
+            return this.authParams.userService.map(req.user)
+        }
+        return Promise.reject('Google authentication failed')
     }
 
     @Post('test/:id')
@@ -39,10 +50,10 @@ export class AuthenticationController<User> {
 
     @Post('anonymous')
     async createAnonymous(@Req() req): Promise<User> {
-        const dto = new CreateUserDto()
         const names = ['Hiker', 'Walkr', 'Guru', 'Rider', 'Pal', 'Doodee']
-        dto.username = `Noughty${names[~~(Math.random() * names.length)]}`
-        const user = await this.authParams.userService.create(dto)
+        const user = await this.authParams.userService.create({
+            username: `Noughty${names[~~(Math.random() * names.length)]}`
+        })
         req.session = { userId: user.id }
         return this.authParams.userService.map(user)
     }

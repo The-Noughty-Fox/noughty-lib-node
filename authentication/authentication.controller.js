@@ -19,18 +19,28 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { Controller, Post, UseGuards, Req, Inject, Param, ParseIntPipe, BadRequestException } from "@nestjs/common";
 import { AnonymousAppleAuthenticationGuard } from "./apple/apple.authentication.guard";
 import { InjectableToken } from "../injectable.token";
-import { CreateUserDto } from "./dto/createuser.dto";
+import { GoogleAuthenticationGuard } from "./google/google.authentication.guard";
 let AuthenticationController = class AuthenticationController {
     constructor(authParams) {
         this.authParams = authParams;
     }
-    authenticate(req) {
+    authenticateApple(req) {
         return __awaiter(this, void 0, void 0, function* () {
             if (req.user && req.user.id) {
                 req.session = { userId: req.user.id };
                 return this.authParams.userService.map(req.user);
             }
-            return Promise.reject('Authentication failed');
+            return Promise.reject('Apple authentication failed');
+        });
+    }
+    authenticateGoogle(req) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            if ((_a = req.user) === null || _a === void 0 ? void 0 : _a.id) {
+                req.session = { userId: req.user.id };
+                return this.authParams.userService.map(req.user);
+            }
+            return Promise.reject('Google authentication failed');
         });
     }
     loginTest(req, id) {
@@ -44,10 +54,10 @@ let AuthenticationController = class AuthenticationController {
     }
     createAnonymous(req) {
         return __awaiter(this, void 0, void 0, function* () {
-            const dto = new CreateUserDto();
             const names = ['Hiker', 'Walkr', 'Guru', 'Rider', 'Pal', 'Doodee'];
-            dto.username = `Noughty${names[~~(Math.random() * names.length)]}`;
-            const user = yield this.authParams.userService.create(dto);
+            const user = yield this.authParams.userService.create({
+                username: `Noughty${names[~~(Math.random() * names.length)]}`
+            });
             req.session = { userId: user.id };
             return this.authParams.userService.map(user);
         });
@@ -57,7 +67,12 @@ __decorate([
     UseGuards(AnonymousAppleAuthenticationGuard),
     Post('apple'),
     __param(0, Req())
-], AuthenticationController.prototype, "authenticate", null);
+], AuthenticationController.prototype, "authenticateApple", null);
+__decorate([
+    UseGuards(GoogleAuthenticationGuard),
+    Post('google'),
+    __param(0, Req())
+], AuthenticationController.prototype, "authenticateGoogle", null);
 __decorate([
     Post('test/:id'),
     __param(0, Req()), __param(1, Param('id', ParseIntPipe))

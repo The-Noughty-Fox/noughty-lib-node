@@ -23,6 +23,7 @@ import { AppleAuthenticationStrategy } from "./apple/apple.authentication.strate
 import { CookiesStrategy } from "./authentication.guard";
 import { AnonymousAppleAuthenticationGuard } from "./apple/apple.authentication.guard";
 import { AppleAuthenticationModule } from "./apple/apple.authentication.module";
+import { GoogleAuthenticationModule } from "./google/google.authentication.module";
 class SIWAMiddleware {
     use(req, res, next) {
         const body = req.body;
@@ -58,6 +59,7 @@ let AuthenticationCoreModule = AuthenticationCoreModule_1 = class Authentication
                 ...options.imports,
                 AuthenticationParamsModule.forRootAsync(options),
                 AppleAuthenticationModule,
+                GoogleAuthenticationModule,
                 PassportModule.register({ session: true }),
                 CookieSessionModule.forRootAsync({
                     imports: [AuthenticationParamsModule.forRootAsync(options)],
