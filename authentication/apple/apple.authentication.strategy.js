@@ -26,7 +26,7 @@ let AppleAuthenticationStrategy = class AppleAuthenticationStrategy extends Pass
         this.authParams = authParams;
     }
     validate(req, accessToken, refreshToken, profile) {
-        var _a;
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             const { id, email } = profile;
             if (!id)
@@ -35,7 +35,7 @@ let AppleAuthenticationStrategy = class AppleAuthenticationStrategy extends Pass
                 || (yield this.authParams.userService.findByEmail(email))
                 || (yield this.authParams.userService.create({
                     email,
-                    username: ((_a = req.body) === null || _a === void 0 ? void 0 : _a.name.given) || 'Unknown',
+                    username: ((_b = (_a = req.body) === null || _a === void 0 ? void 0 : _a.userInfo) === null || _b === void 0 ? void 0 : _b.name.given) || 'Unknown',
                     apple_token: id,
                 }));
         });

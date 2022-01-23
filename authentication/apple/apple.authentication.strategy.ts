@@ -21,7 +21,7 @@ export class AppleAuthenticationStrategy extends PassportStrategy(AppleStrategy.
             || await this.authParams.userService.findByEmail(email)
             || await this.authParams.userService.create({
                 email,
-                username: (req.body as any)?.name.given || 'Unknown',
+                username: (req.body as any)?.userInfo?.name.given || 'Unknown',
                 apple_token: id,
             })
     }
