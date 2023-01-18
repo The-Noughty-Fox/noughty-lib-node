@@ -23,7 +23,7 @@ export class AuthenticationGuard extends AuthGuard('cookies') {}
 
 @Injectable()
 export class SignedUpGuard extends AuthGuard('cookies') {
-    handleRequest<T>(err, u, info, context, status): T {
+    handleRequest(err, u, info, context, status) {
         const user = super.handleRequest(err, u, info, context, status)
         if (!user?.email) throw new ForbiddenException("Anonymous users can't access resource")
         return user
