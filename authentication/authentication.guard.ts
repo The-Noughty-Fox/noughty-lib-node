@@ -1,5 +1,5 @@
 import {AuthGuard, PassportStrategy} from "@nestjs/passport";
-import {ForbiddenException, Inject, Injectable, UnauthorizedException} from "@nestjs/common";
+import { ForbiddenException, Inject, Injectable, UnauthorizedException, CanActivate, ExecutionContext } from '@nestjs/common';
 import {Request} from "express";
 import {Strategy} from 'passport-custom';
 import {InjectableToken} from "../injectable.token";

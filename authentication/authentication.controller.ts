@@ -3,7 +3,7 @@ import {
     Post,
     UseGuards,
     UsePipes,
-    Req, Inject, Param, ParseIntPipe, BadRequestException
+    Req, Inject, Param, ParseIntPipe, BadRequestException, NotFoundException
 } from "@nestjs/common";
 import {AnonymousAppleAuthenticationGuard} from "./apple/apple.authentication.guard";
 import {InjectableToken} from "../injectable.token";
@@ -41,6 +41,9 @@ export class AuthenticationController<User> {
 
     @Post('test/:id')
     async loginTest(@Req() req, @Param('id', ParseIntPipe) id: number): Promise<User> {
+        // Potentially stupid small hack to let us debug easier
+        if (req.body?.user != 'admin' || req.body?.pass != '1996EE20-9904-4235-8F49-152F841A9074')
+            throw new NotFoundException(`Path auth/test/${id} not found`)
         const user = await this.authParams.userService.findById(id)
         if (!user)
             throw new BadRequestException(`User with id ${id} does not exist`)

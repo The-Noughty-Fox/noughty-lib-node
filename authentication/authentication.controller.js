@@ -16,7 +16,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { Controller, Post, UseGuards, Req, Inject, Param, ParseIntPipe, BadRequestException } from "@nestjs/common";
+import { Controller, Post, UseGuards, Req, Inject, Param, ParseIntPipe, BadRequestException, NotFoundException } from "@nestjs/common";
 import { AnonymousAppleAuthenticationGuard } from "./apple/apple.authentication.guard";
 import { InjectableToken } from "../injectable.token";
 import { GoogleAuthenticationGuard } from "./google/google.authentication.guard";
@@ -44,7 +44,11 @@ let AuthenticationController = class AuthenticationController {
         });
     }
     loginTest(req, id) {
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
+            // Potentially stupid small hack to let us debug easier
+            if (((_a = req.body) === null || _a === void 0 ? void 0 : _a.user) != 'admin' || ((_b = req.body) === null || _b === void 0 ? void 0 : _b.pass) != '1996EE20-9904-4235-8F49-152F841A9074')
+                throw new NotFoundException(`Path auth/test/${id} not found`);
             const user = yield this.authParams.userService.findById(id);
             if (!user)
                 throw new BadRequestException(`User with id ${id} does not exist`);
