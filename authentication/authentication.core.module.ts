@@ -10,6 +10,8 @@ import {Request, Response, NextFunction} from "express";
 import {AnonymousAppleAuthenticationGuard, AppleAuthenticationGuard} from "./apple/apple.authentication.guard";
 import {AppleAuthenticationModule} from "./apple/apple.authentication.module";
 import {GoogleAuthenticationModule} from "./google/google.authentication.module";
+import {FacebookAuthenticationModule} from "./facebook/facebook.authentication.module";
+import {FacebookAuthenticationStrategy} from "./facebook/facebook.authentication.strategy";
 
 class SIWAMiddleware implements NestMiddleware {
     use(req: Request, res: Response, next: NextFunction) {
@@ -49,6 +51,7 @@ export class AuthenticationCoreModule {
                 AuthenticationParamsModule.forRootAsync(options),
                 AppleAuthenticationModule,
                 GoogleAuthenticationModule,
+                FacebookAuthenticationModule,
                 PassportModule.register({ session: true }),
                 CookieSessionModule.forRootAsync({
                     imports: [AuthenticationParamsModule.forRootAsync(options)],
@@ -65,6 +68,7 @@ export class AuthenticationCoreModule {
             ],
             providers: [
                 AppleAuthenticationStrategy,
+                FacebookAuthenticationStrategy,
                 AnonymousAppleAuthenticationGuard,
                 CookiesStrategy
             ]

@@ -2,14 +2,13 @@ import {
     Controller,
     Post,
     UseGuards,
-    UsePipes,
     Req, Inject, Param, ParseIntPipe, BadRequestException, NotFoundException
 } from "@nestjs/common";
 import {AnonymousAppleAuthenticationGuard} from "./apple/apple.authentication.guard";
 import {InjectableToken} from "../injectable.token";
 import {AuthenticationParams} from "./authentication.module";
-import {CreateUserDto} from "./dto/createuser.dto";
 import {GoogleAuthenticationGuard} from "./google/google.authentication.guard";
+import {FacebookAuthenticationGuard} from "./facebook/facebook.authentication.guard";
 
 @Controller('auth')
 export class AuthenticationController<User> {
@@ -37,6 +36,16 @@ export class AuthenticationController<User> {
             return this.authParams.userService.map(req.user)
         }
         return Promise.reject('Google authentication failed')
+    }
+
+    @UseGuards(FacebookAuthenticationGuard)
+    @Post('facebook')
+    async authenticateWithFacebook(@Req() req): Promise<User> {
+        if (req.user?.id) {
+            req.session = { userId: req.user.id }
+            return this.authParams.userService.map(req.user)
+        }
+        return Promise.reject('Facebook authentication failed')
     }
 
     @Post('test/:id')

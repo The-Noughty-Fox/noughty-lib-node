@@ -4,6 +4,7 @@ import {AppleConfig} from "./injectables/apple.config";
 import {ModuleMetadata} from "@nestjs/common/interfaces";
 import {AuthenticationCoreModule} from "./authentication.core.module";
 import {GoogleConfig} from "./injectables/google.config";
+import {FacebookConfig} from "./injectables/facebook.config";
 
 export interface AuthenticationOptions extends Pick<ModuleMetadata, 'imports'> {
     useFactory: (...args: any[]) => AuthenticationParams
@@ -15,6 +16,7 @@ export interface AuthenticationParams {
     userService: IUserService
     appleConfig: AppleConfig
     googleConfig: GoogleConfig
+    facebookConfig: FacebookConfig
 }
 
 @Module({})

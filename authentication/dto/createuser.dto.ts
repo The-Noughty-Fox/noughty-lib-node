@@ -3,4 +3,5 @@ export interface CreateUserDto {
     username: string;
     apple_token?: string;
     google_token?: string;
+    facebook_token?: string;
 }
