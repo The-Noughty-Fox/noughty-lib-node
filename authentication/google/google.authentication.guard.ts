@@ -2,7 +2,6 @@ import {CanActivate, ExecutionContext, Inject, Injectable} from "@nestjs/common"
 import {InjectableToken} from "../../injectable.token";
 import {AuthenticationParams} from "../authentication.module";
 import {OAuth2Client} from "google-auth-library";
-import {CreateUserDto} from "../dto/createuser.dto";
 
 @Injectable()
 export class GoogleAuthenticationGuard implements CanActivate {

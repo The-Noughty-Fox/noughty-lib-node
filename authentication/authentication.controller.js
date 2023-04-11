@@ -20,6 +20,7 @@ import { Controller, Post, UseGuards, Req, Inject, Param, ParseIntPipe, BadReque
 import { AnonymousAppleAuthenticationGuard } from "./apple/apple.authentication.guard";
 import { InjectableToken } from "../injectable.token";
 import { GoogleAuthenticationGuard } from "./google/google.authentication.guard";
+import { FacebookAuthenticationGuard } from "./facebook/facebook.authentication.guard";
 let AuthenticationController = class AuthenticationController {
     constructor(authParams) {
         this.authParams = authParams;
@@ -41,6 +42,16 @@ let AuthenticationController = class AuthenticationController {
                 return this.authParams.userService.map(req.user);
             }
             return Promise.reject('Google authentication failed');
+        });
+    }
+    authenticateWithFacebookPo(req) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            if ((_a = req.user) === null || _a === void 0 ? void 0 : _a.id) {
+                req.session = { userId: req.user.id };
+                return req.user;
+            }
+            return Promise.reject('Facebook authentication failed');
         });
     }
     loginTest(req, id) {
@@ -77,6 +88,11 @@ __decorate([
     Post('google'),
     __param(0, Req())
 ], AuthenticationController.prototype, "authenticateGoogle", null);
+__decorate([
+    UseGuards(FacebookAuthenticationGuard),
+    Post('facebook'),
+    __param(0, Req())
+], AuthenticationController.prototype, "authenticateWithFacebookPo", null);
 __decorate([
     Post('test/:id'),
     __param(0, Req()), __param(1, Param('id', ParseIntPipe))
