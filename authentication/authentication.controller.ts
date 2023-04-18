@@ -2,7 +2,7 @@ import {
     Controller,
     Post,
     UseGuards,
-    Req, Inject, Param, ParseIntPipe, BadRequestException, NotFoundException
+    Req, Inject, Param, ParseIntPipe, BadRequestException, NotFoundException, Get, HttpStatus
 } from "@nestjs/common";
 import {AnonymousAppleAuthenticationGuard} from "./apple/apple.authentication.guard";
 import {InjectableToken} from "../injectable.token";
@@ -40,10 +40,10 @@ export class AuthenticationController<User> {
 
     @UseGuards(FacebookAuthenticationGuard)
     @Post('facebook')
-    async authenticateWithFacebook(@Req() req): Promise<User> {
+    async authenticateWithFacebookPo(@Req() req): Promise<User> {
         if (req.user?.id) {
             req.session = { userId: req.user.id }
-            return this.authParams.userService.map(req.user)
+            return req.user;
         }
         return Promise.reject('Facebook authentication failed')
     }

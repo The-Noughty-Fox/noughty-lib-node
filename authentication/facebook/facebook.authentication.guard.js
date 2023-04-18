@@ -16,49 +16,39 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { AuthGuard } from "@nestjs/passport";
 import { Inject, Injectable } from "@nestjs/common";
 import { InjectableToken } from "../../injectable.token";
-let FacebookAuthenticationGuard = class FacebookAuthenticationGuard extends AuthGuard('facebook') {
-    constructor(authParams, facebookGuard) {
-        super();
+let FacebookAuthenticationGuard = class FacebookAuthenticationGuard {
+    constructor(httpService, authParams) {
+        this.httpService = httpService;
         this.authParams = authParams;
-        this.facebookGuard = facebookGuard;
     }
     canActivate(context) {
-        const _super = Object.create(null, {
-            canActivate: { get: () => super.canActivate }
-        });
         return __awaiter(this, void 0, void 0, function* () {
             const req = context.switchToHttp().getRequest();
-            let newUser;
-            try {
-                yield _super.canActivate.call(this, context);
-                newUser = req.user;
-            }
-            catch (_a) { }
-            let oldUser;
-            try {
-                yield this.facebookGuard.canActivate(context);
-                oldUser = req.user;
-            }
-            catch (e) {
-                console.log('Apple authentication error: ', e);
-                return false;
-            }
-            if (!oldUser)
-                return false;
-            if (!newUser || newUser.id == oldUser.id)
-                return true;
-            req.user = yield this.authParams.userService.link(oldUser, newUser);
+            const { token } = req.body;
+            if (!token)
+                return Promise.reject(`Facebook authentication requires 'token' be sent in body`);
+            const fbResult = yield this.httpService
+                .get(`https://graph.facebook.com/me?access_token=${token}`)
+                .toPromise();
+            const { name, emails, id } = fbResult.data;
+            req.user = (yield this.authParams.userService.findByFacebookToken(id))
+                || (yield this.authParams.userService.findByEmail(emails[0].value))
+                || (yield this.authParams.userService.create({
+                    email: emails[0].value,
+                    username: name.givenName || 'Unknown',
+                    firstname: name.familyName,
+                    lastname: name.givenName,
+                    facebook_token: token,
+                }));
             return true;
         });
     }
 };
 FacebookAuthenticationGuard = __decorate([
     Injectable(),
-    __param(0, Inject(InjectableToken.AUTH_PARAMS)),
-    __param(1, Inject(InjectableToken.FACEBOOK_GUARD))
+    __param(1, Inject(InjectableToken.AUTH_PARAMS))
 ], FacebookAuthenticationGuard);
 export { FacebookAuthenticationGuard };
 //# sourceMappingURL=facebook.authentication.guard.js.map

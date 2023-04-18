@@ -44,12 +44,12 @@ let AuthenticationController = class AuthenticationController {
             return Promise.reject('Google authentication failed');
         });
     }
-    authenticateWithFacebook(req) {
+    authenticateWithFacebookPo(req) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
             if ((_a = req.user) === null || _a === void 0 ? void 0 : _a.id) {
                 req.session = { userId: req.user.id };
-                return this.authParams.userService.map(req.user);
+                return req.user;
             }
             return Promise.reject('Facebook authentication failed');
         });
@@ -92,7 +92,7 @@ __decorate([
     UseGuards(FacebookAuthenticationGuard),
     Post('facebook'),
     __param(0, Req())
-], AuthenticationController.prototype, "authenticateWithFacebook", null);
+], AuthenticationController.prototype, "authenticateWithFacebookPo", null);
 __decorate([
     Post('test/:id'),
     __param(0, Req()), __param(1, Param('id', ParseIntPipe))

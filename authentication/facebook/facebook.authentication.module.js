@@ -6,7 +6,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { InjectableToken } from "../../injectable.token";
 import { FacebookAuthenticationGuard } from "./facebook.authentication.guard";
-import { Global, Module } from "@nestjs/common";
+import { Global, HttpModule, Module } from "@nestjs/common";
 const facebookGuard = {
     provide: InjectableToken.FACEBOOK_GUARD,
     useClass: FacebookAuthenticationGuard
@@ -16,6 +16,7 @@ let FacebookAuthenticationModule = class FacebookAuthenticationModule {
 FacebookAuthenticationModule = __decorate([
     Global(),
     Module({
+        imports: [HttpModule],
         providers: [facebookGuard],
         exports: [facebookGuard]
     })

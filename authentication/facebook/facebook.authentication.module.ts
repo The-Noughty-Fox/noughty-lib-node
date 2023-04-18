@@ -1,6 +1,6 @@
 import {InjectableToken} from "../../injectable.token";
 import {FacebookAuthenticationGuard} from "./facebook.authentication.guard";
-import {Global, Module} from "@nestjs/common";
+import {Global, HttpModule, Module} from "@nestjs/common";
 
 const facebookGuard = {
     provide: InjectableToken.FACEBOOK_GUARD,
@@ -9,6 +9,7 @@ const facebookGuard = {
 
 @Global()
 @Module({
+    imports: [HttpModule],
     providers: [facebookGuard],
     exports: [facebookGuard]
 })

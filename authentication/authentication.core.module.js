@@ -25,7 +25,6 @@ import { AnonymousAppleAuthenticationGuard } from "./apple/apple.authentication.
 import { AppleAuthenticationModule } from "./apple/apple.authentication.module";
 import { GoogleAuthenticationModule } from "./google/google.authentication.module";
 import { FacebookAuthenticationModule } from "./facebook/facebook.authentication.module";
-import { FacebookAuthenticationStrategy } from "./facebook/facebook.authentication.strategy";
 class SIWAMiddleware {
     use(req, res, next) {
         const body = req.body;
@@ -79,7 +78,6 @@ let AuthenticationCoreModule = AuthenticationCoreModule_1 = class Authentication
             ],
             providers: [
                 AppleAuthenticationStrategy,
-                FacebookAuthenticationStrategy,
                 AnonymousAppleAuthenticationGuard,
                 CookiesStrategy
             ]

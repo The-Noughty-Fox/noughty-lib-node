@@ -4,14 +4,13 @@ import {InjectableToken} from "../injectable.token";
 import {PassportModule} from "@nestjs/passport";
 import {CookieSessionModule, NestCookieSessionOptions} from "nestjs-cookie-session";
 import {AppleAuthenticationStrategy} from "./apple/apple.authentication.strategy";
-import {AuthenticationGuard, CookiesStrategy} from "./authentication.guard";
+import {CookiesStrategy} from "./authentication.guard";
 import {AuthenticationOptions, AuthenticationParams} from "./authentication.module";
 import {Request, Response, NextFunction} from "express";
 import {AnonymousAppleAuthenticationGuard, AppleAuthenticationGuard} from "./apple/apple.authentication.guard";
 import {AppleAuthenticationModule} from "./apple/apple.authentication.module";
 import {GoogleAuthenticationModule} from "./google/google.authentication.module";
 import {FacebookAuthenticationModule} from "./facebook/facebook.authentication.module";
-import {FacebookAuthenticationStrategy} from "./facebook/facebook.authentication.strategy";
 
 class SIWAMiddleware implements NestMiddleware {
     use(req: Request, res: Response, next: NextFunction) {
@@ -68,7 +67,6 @@ export class AuthenticationCoreModule {
             ],
             providers: [
                 AppleAuthenticationStrategy,
-                FacebookAuthenticationStrategy,
                 AnonymousAppleAuthenticationGuard,
                 CookiesStrategy
             ]

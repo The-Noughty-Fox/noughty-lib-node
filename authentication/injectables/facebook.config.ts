@@ -6,7 +6,7 @@ export class FacebookConfig {
         public clientID: string,
         public clientSecret: string,
         public callbackURL: string,
-        public scope: string[],
+        public scope: string,
         public profileFields: ["emails", "name"]
     ) {}
 }
