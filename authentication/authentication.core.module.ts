@@ -42,6 +42,7 @@ export class AuthenticationParamsModule {
 export class AuthenticationCoreModule {
     static forRootAsync(options: AuthenticationOptions, withController: boolean = false): DynamicModule {
         return {
+            
             controllers: withController ? [AuthenticationController] : [],
             module: AuthenticationCoreModule,
             imports: [
