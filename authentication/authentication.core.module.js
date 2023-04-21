@@ -53,18 +53,20 @@ AuthenticationParamsModule = AuthenticationParamsModule_1 = __decorate([
 ], AuthenticationParamsModule);
 export { AuthenticationParamsModule };
 let AuthenticationCoreModule = AuthenticationCoreModule_1 = class AuthenticationCoreModule {
-    static forRootAsync(options) {
+    static forRootAsync(options, withController = false) {
         return {
+            controllers: withController ? [AuthenticationController] : [],
             module: AuthenticationCoreModule_1,
             imports: [
                 ...options.imports,
                 AuthenticationParamsModule.forRootAsync(options),
                 AppleAuthenticationModule,
+                FacebookAuthenticationModule,
                 GoogleAuthenticationModule,
                 FacebookAuthenticationModule,
                 PassportModule.register({ session: true }),
                 CookieSessionModule.forRootAsync({
-                    imports: [AuthenticationParamsModule.forRootAsync(options)],
+                    imports: [AuthenticationParamsModule.forRootAsync(options).module],
                     inject: [InjectableToken.AUTH_PARAMS],
                     useFactory: (authParams) => __awaiter(this, void 0, void 0, function* () {
                         return {
@@ -90,9 +92,7 @@ let AuthenticationCoreModule = AuthenticationCoreModule_1 = class Authentication
     }
 };
 AuthenticationCoreModule = AuthenticationCoreModule_1 = __decorate([
-    Module({
-        controllers: [AuthenticationController]
-    })
+    Module({})
 ], AuthenticationCoreModule);
 export { AuthenticationCoreModule };
 //# sourceMappingURL=authentication.core.module.js.map

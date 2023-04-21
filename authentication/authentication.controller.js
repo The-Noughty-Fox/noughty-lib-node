@@ -95,7 +95,8 @@ __decorate([
 ], AuthenticationController.prototype, "authenticateWithFacebookPo", null);
 __decorate([
     Post('test/:id'),
-    __param(0, Req()), __param(1, Param('id', ParseIntPipe))
+    __param(0, Req()),
+    __param(1, Param('id', ParseIntPipe))
 ], AuthenticationController.prototype, "loginTest", null);
 __decorate([
     Post('anonymous'),

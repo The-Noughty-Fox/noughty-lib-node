@@ -13,19 +13,19 @@ export interface AuthenticationOptions extends Pick<ModuleMetadata, 'imports'> {
 
 export interface AuthenticationParams {
     secret: string
-    userService: IUserService
     appleConfig: AppleConfig
     googleConfig: GoogleConfig
     facebookConfig: FacebookConfig
+    userService: IUserService
 }
 
 @Module({})
 export class AuthenticationModule {
-    static forRootAsync(options: AuthenticationOptions): DynamicModule {
+    static forRootAsync(options: AuthenticationOptions, withController: boolean = false): DynamicModule {
         return {
             module: AuthenticationModule,
             imports: [
-                AuthenticationCoreModule.forRootAsync(options)
+                AuthenticationCoreModule.forRootAsync(options, withController)
             ]
         }
     }
