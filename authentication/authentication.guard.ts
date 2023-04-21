@@ -1,5 +1,5 @@
 import {AuthGuard, PassportStrategy} from "@nestjs/passport";
-import { ForbiddenException, Inject, Injectable, UnauthorizedException, CanActivate, ExecutionContext } from '@nestjs/common';
+import { ForbiddenException, Inject, Injectable, UnauthorizedException} from '@nestjs/common';
 import {Request} from "express";
 import {Strategy} from 'passport-custom';
 import {InjectableToken} from "../injectable.token";
@@ -8,7 +8,8 @@ import {AuthenticationParams} from "./authentication.module";
 @Injectable()
 export class CookiesStrategy extends PassportStrategy(Strategy, 'cookies') {
 
-    constructor(@Inject(InjectableToken.AUTH_PARAMS) private authParams: AuthenticationParams) {
+    constructor(
+        @Inject(InjectableToken.AUTH_PARAMS) private authParams: AuthenticationParams) {
         super();
     }
 

@@ -18,9 +18,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { Inject, Injectable } from "@nestjs/common";
 import { InjectableToken } from "../../injectable.token";
+import axios from "axios";
 let FacebookAuthenticationGuard = class FacebookAuthenticationGuard {
-    constructor(httpService, authParams) {
-        this.httpService = httpService;
+    constructor(authParams) {
         this.authParams = authParams;
     }
     canActivate(context) {
@@ -29,18 +29,18 @@ let FacebookAuthenticationGuard = class FacebookAuthenticationGuard {
             const { token } = req.body;
             if (!token)
                 return Promise.reject(`Facebook authentication requires 'token' be sent in body`);
-            const fbResult = yield this.httpService
-                .get(`https://graph.facebook.com/me?access_token=${token}`)
-                .toPromise();
-            const { name, emails, id } = fbResult.data;
+            const { data } = yield axios
+                .get(`https://graph.facebook.com/me?access_token=${token}`);
+            const { name, emails, id } = data;
+            const email = emails ? emails[0].value : "";
             req.user = (yield this.authParams.userService.findByFacebookToken(id))
-                || (yield this.authParams.userService.findByEmail(emails[0].value))
+                || (yield this.authParams.userService.findByEmail(email))
                 || (yield this.authParams.userService.create({
-                    email: emails[0].value,
+                    email,
                     username: name.givenName || 'Unknown',
                     firstname: name.familyName,
                     lastname: name.givenName,
-                    facebook_token: token,
+                    facebook_token: id,
                 }));
             return true;
         });
@@ -48,7 +48,7 @@ let FacebookAuthenticationGuard = class FacebookAuthenticationGuard {
 };
 FacebookAuthenticationGuard = __decorate([
     Injectable(),
-    __param(1, Inject(InjectableToken.AUTH_PARAMS))
+    __param(0, Inject(InjectableToken.AUTH_PARAMS))
 ], FacebookAuthenticationGuard);
 export { FacebookAuthenticationGuard };
 //# sourceMappingURL=facebook.authentication.guard.js.map

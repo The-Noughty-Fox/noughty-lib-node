@@ -7,7 +7,7 @@ import {AppleAuthenticationStrategy} from "./apple/apple.authentication.strategy
 import {CookiesStrategy} from "./authentication.guard";
 import {AuthenticationOptions, AuthenticationParams} from "./authentication.module";
 import {Request, Response, NextFunction} from "express";
-import {AnonymousAppleAuthenticationGuard, AppleAuthenticationGuard} from "./apple/apple.authentication.guard";
+import {AnonymousAppleAuthenticationGuard} from "./apple/apple.authentication.guard";
 import {AppleAuthenticationModule} from "./apple/apple.authentication.module";
 import {GoogleAuthenticationModule} from "./google/google.authentication.module";
 import {FacebookAuthenticationModule} from "./facebook/facebook.authentication.module";
@@ -38,22 +38,21 @@ export class AuthenticationParamsModule {
     }
 }
 
-@Module({
-    controllers: [AuthenticationController]
-})
+@Module({})
 export class AuthenticationCoreModule {
-    static forRootAsync(options: AuthenticationOptions): DynamicModule {
+    static forRootAsync(options: AuthenticationOptions, withController: boolean = false): DynamicModule {
         return {
+            controllers: withController ? [AuthenticationController] : [],
             module: AuthenticationCoreModule,
             imports: [
                 ...options.imports,
                 AuthenticationParamsModule.forRootAsync(options),
                 AppleAuthenticationModule,
-                GoogleAuthenticationModule,
                 FacebookAuthenticationModule,
+                GoogleAuthenticationModule,
                 PassportModule.register({ session: true }),
                 CookieSessionModule.forRootAsync({
-                    imports: [AuthenticationParamsModule.forRootAsync(options)],
+                    imports: [AuthenticationParamsModule.forRootAsync(options).module],
                     inject: [InjectableToken.AUTH_PARAMS],
                     useFactory: async (authParams: AuthenticationParams): Promise<NestCookieSessionOptions> => {
                         return {
