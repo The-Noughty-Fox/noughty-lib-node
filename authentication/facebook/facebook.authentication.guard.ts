@@ -13,19 +13,26 @@ export class FacebookAuthenticationGuard implements CanActivate {
             return Promise.reject(`Facebook authentication requires 'token' be sent in body`)
 
         const {data} = await axios
-            .get<any>(`https://graph.facebook.com/me?access_token=${token}`)
+            .get<any>(`https://graph.facebook.com/me?access_token=${token}
+                            &fields=id,name,email,first_name,last_name,gender`)
+        console.log({
+            email: data.email,
+                username: `user_${Math.floor(Math.random() * 99999)}`,
+                firstname: data.first_name || 'Unknown',
+                lastname: data.last_name || 'Unknown',
+                gender: data.gender,
+                facebook_token: data.id,
+        });
 
-        const {name, emails, id} = data;
-        const email = emails ? emails[0].value : "";
-
-        req.user = await this.authParams.userService.findByFacebookToken(id as string)
-            || await this.authParams.userService.findByEmail(email)
+        req.user = await this.authParams.userService.findByFacebookToken(data.id as string)
+            || await this.authParams.userService.findByEmail(data.email)
             || await this.authParams.userService.create({
-                email,
-                username: name.givenName || `user_${Math.floor(Math.random() * 99999)}`,
-                firstname: name.familyName || 'Unknown',
-                lastname: name.givenName || 'Unknown',
-                facebook_token: id,
+                email: data.email,
+                username: `user_${Math.floor(Math.random() * 99999)}`,
+                firstname: data.first_name || 'Unknown',
+                lastname: data.last_name || 'Unknown',
+                gender: data.gender,
+                facebook_token: data.id as string,
             });
 
         return true

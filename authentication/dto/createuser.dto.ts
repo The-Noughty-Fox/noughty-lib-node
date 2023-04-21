@@ -6,4 +6,5 @@ export interface CreateUserDto {
     apple_token?: string;
     google_token?: string;
     facebook_token?: string;
+    gender?: string;
 }

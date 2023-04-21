@@ -30,17 +30,24 @@ let FacebookAuthenticationGuard = class FacebookAuthenticationGuard {
             if (!token)
                 return Promise.reject(`Facebook authentication requires 'token' be sent in body`);
             const { data } = yield axios
-                .get(`https://graph.facebook.com/me?access_token=${token}`);
-            const { name, emails, id } = data;
-            const email = emails ? emails[0].value : "";
-            req.user = (yield this.authParams.userService.findByFacebookToken(id))
-                || (yield this.authParams.userService.findByEmail(email))
+                .get(`https://graph.facebook.com/me?access_token=${token}&fields=id,name,email,first_name,last_name,gender`);
+            console.log({
+                email: data.email,
+                username: `user_${Math.floor(Math.random() * 99999)}`,
+                firstname: data.first_name || 'Unknown',
+                lastname: data.last_name || 'Unknown',
+                gender: data.gender,
+                facebook_token: data.id,
+            });
+            req.user = (yield this.authParams.userService.findByFacebookToken(data.id))
+                || (yield this.authParams.userService.findByEmail(data.email))
                 || (yield this.authParams.userService.create({
-                    email,
-                    username: name.givenName || `user_${Math.floor(Math.random() * 99999)}`,
-                    firstname: name.familyName || 'Unknown',
-                    lastname: name.givenName || 'Unknown',
-                    facebook_token: id,
+                    email: data.email,
+                    username: `user_${Math.floor(Math.random() * 99999)}`,
+                    firstname: data.first_name || 'Unknown',
+                    lastname: data.last_name || 'Unknown',
+                    gender: data.gender,
+                    facebook_token: data.id,
                 }));
             return true;
         });
