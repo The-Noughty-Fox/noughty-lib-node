@@ -31,10 +31,10 @@ let FacebookAuthenticationGuard = class FacebookAuthenticationGuard {
                 return Promise.reject(`Facebook authentication requires 'token' be sent in body`);
             const { data } = yield axios
                 .get(`https://graph.facebook.com/me?access_token=${token}&fields=id,name,email,first_name,last_name,gender`);
-            req.user = (yield this.authParams.userService.findByFacebookToken(data.id))
+            req.user = (yield this.authParams.userService.findBySocialMediaToken("facebook", data.id))
                 || (yield this.authParams.userService.findByEmail(data.email))
                 || (yield this.authParams.userService.create({
-                    email: data.email,
+                    email: data.email || "Unknown",
                     username: `user_${Math.floor(Math.random() * 99999)}`,
                     firstname: data.first_name || 'Unknown',
                     lastname: data.last_name || 'Unknown',

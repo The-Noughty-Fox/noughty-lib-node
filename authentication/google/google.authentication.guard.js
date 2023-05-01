@@ -36,6 +36,7 @@ let GoogleAuthenticationGuard = class GoogleAuthenticationGuard {
             });
             const { given_name: name, sub: id, email } = ticket.getPayload();
             req.user = (yield this.authParams.userService.findByGoogleToken(id))
+                || (yield this.authParams.userService.findBySocialMediaToken("google", id))
                 || (yield this.authParams.userService.findByEmail(email))
                 || (yield this.authParams.userService.create({ email, username: name, google_token: id }));
             return true;
