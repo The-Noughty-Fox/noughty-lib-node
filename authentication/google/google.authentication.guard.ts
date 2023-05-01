@@ -26,6 +26,7 @@ export class GoogleAuthenticationGuard implements CanActivate {
         const {given_name:name, sub:id, email} = ticket.getPayload()
 
         req.user = await this.authParams.userService.findByGoogleToken(id)
+            || await this.authParams.userService.findBySocialMediaToken("google", id)
             || await this.authParams.userService.findByEmail(email)
             || await this.authParams.userService.create({email, username: name, google_token: id})
 

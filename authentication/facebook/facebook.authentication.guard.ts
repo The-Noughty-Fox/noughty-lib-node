@@ -15,10 +15,10 @@ export class FacebookAuthenticationGuard implements CanActivate {
         const {data} = await axios
             .get<any>(`https://graph.facebook.com/me?access_token=${token}&fields=id,name,email,first_name,last_name,gender`)
 
-        req.user = await this.authParams.userService.findByFacebookToken(data.id as string)
+        req.user = await this.authParams.userService.findBySocialMediaToken("facebook", data.id as string)
             || await this.authParams.userService.findByEmail(data.email)
             || await this.authParams.userService.create({
-                email: data.email,
+                email: data.email || "Unknown",
                 username: `user_${Math.floor(Math.random() * 99999)}`,
                 firstname: data.first_name || 'Unknown',
                 lastname: data.last_name || 'Unknown',

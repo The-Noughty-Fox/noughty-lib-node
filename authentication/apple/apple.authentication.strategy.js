@@ -32,6 +32,7 @@ let AppleAuthenticationStrategy = class AppleAuthenticationStrategy extends Pass
             if (!id)
                 return Promise.reject("Apple jwt token does not contain the 'sub' field.");
             return (yield this.authParams.userService.findByAppleToken(id))
+                || (yield this.authParams.userService.findBySocialMediaToken("apple", id))
                 || (yield this.authParams.userService.findByEmail(email))
                 || (yield this.authParams.userService.create({
                     email,

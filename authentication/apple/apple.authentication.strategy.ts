@@ -18,6 +18,7 @@ export class AppleAuthenticationStrategy extends PassportStrategy(AppleStrategy.
         const {id, email} = profile
         if (!id) return Promise.reject("Apple jwt token does not contain the 'sub' field.")
         return await this.authParams.userService.findByAppleToken(id as string)
+            || await this.authParams.userService.findBySocialMediaToken("apple", id as string)
             || await this.authParams.userService.findByEmail(email)
             || await this.authParams.userService.create({
                 email,
