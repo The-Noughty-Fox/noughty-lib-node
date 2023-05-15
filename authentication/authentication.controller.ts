@@ -48,18 +48,6 @@ export class AuthenticationController<User> {
         return Promise.reject('Facebook authentication failed')
     }
 
-    @Post('test/:id')
-    async loginTest(@Req() req, @Param('id', ParseIntPipe) id: number): Promise<User> {
-        // Potentially stupid small hack to let us debug easier
-        if (req.body?.user != 'admin' || req.body?.pass != '1996EE20-9904-4235-8F49-152F841A9074')
-            throw new NotFoundException(`Path auth/test/${id} not found`)
-        const user = await this.authParams.userService.findById(id)
-        if (!user)
-            throw new BadRequestException(`User with id ${id} does not exist`)
-        req.session = { userId: id }
-        return this.authParams.userService.map(user)
-    }
-
     @Post('anonymous')
     async createAnonymous(@Req() req): Promise<User> {
         const names = ['Hiker', 'Walkr', 'Guru', 'Rider', 'Pal', 'Doodee']

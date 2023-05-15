@@ -16,7 +16,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { Controller, Post, UseGuards, Req, Inject, Param, ParseIntPipe, BadRequestException, NotFoundException } from "@nestjs/common";
+import { Controller, Post, UseGuards, Req, Inject } from "@nestjs/common";
 import { AnonymousAppleAuthenticationGuard } from "./apple/apple.authentication.guard";
 import { InjectableToken } from "../injectable.token";
 import { GoogleAuthenticationGuard } from "./google/google.authentication.guard";
@@ -54,19 +54,6 @@ let AuthenticationController = class AuthenticationController {
             return Promise.reject('Facebook authentication failed');
         });
     }
-    loginTest(req, id) {
-        var _a, _b;
-        return __awaiter(this, void 0, void 0, function* () {
-            // Potentially stupid small hack to let us debug easier
-            if (((_a = req.body) === null || _a === void 0 ? void 0 : _a.user) != 'admin' || ((_b = req.body) === null || _b === void 0 ? void 0 : _b.pass) != '1996EE20-9904-4235-8F49-152F841A9074')
-                throw new NotFoundException(`Path auth/test/${id} not found`);
-            const user = yield this.authParams.userService.findById(id);
-            if (!user)
-                throw new BadRequestException(`User with id ${id} does not exist`);
-            req.session = { userId: id };
-            return this.authParams.userService.map(user);
-        });
-    }
     createAnonymous(req) {
         return __awaiter(this, void 0, void 0, function* () {
             const names = ['Hiker', 'Walkr', 'Guru', 'Rider', 'Pal', 'Doodee'];
@@ -93,11 +80,6 @@ __decorate([
     Post('facebook'),
     __param(0, Req())
 ], AuthenticationController.prototype, "authenticateWithFacebookPo", null);
-__decorate([
-    Post('test/:id'),
-    __param(0, Req()),
-    __param(1, Param('id', ParseIntPipe))
-], AuthenticationController.prototype, "loginTest", null);
 __decorate([
     Post('anonymous'),
     __param(0, Req())
