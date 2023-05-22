@@ -13,7 +13,8 @@ export class FacebookAuthenticationGuard implements CanActivate {
             return Promise.reject(`Facebook authentication requires 'token' be sent in body`)
 
         const {data} = await axios
-            .get<any>(`https://graph.facebook.com/me?access_token=${token}&fields=id,name,email,first_name,last_name,gender`)
+            .get<any>(`https://graph.facebook.com/me?access_token=${token}&
+                fields=id,name,email,first_name,last_name,gender,picture`)
 
         req.user = await this.authParams.userService.findBySocialMediaToken("facebook", data.id as string)
             || await this.authParams.userService.findByEmail(data.email)
@@ -24,6 +25,7 @@ export class FacebookAuthenticationGuard implements CanActivate {
                 lastname: data.last_name || 'Unknown',
                 gender: data.gender,
                 facebook_token: data.id as string,
+                socialProfilePictureUrl: data.picture.data.url
             });
 
         return true

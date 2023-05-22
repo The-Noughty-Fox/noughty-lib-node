@@ -7,4 +7,5 @@ export interface CreateUserDto {
     google_token?: string;
     facebook_token?: string;
     gender?: string;
+    socialProfilePictureUrl?: string;
 }

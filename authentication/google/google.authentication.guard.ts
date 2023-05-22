@@ -21,14 +21,20 @@ export class GoogleAuthenticationGuard implements CanActivate {
             return Promise.reject(`Google authentication requires 'token' be sent in body`)
         const ticket = await this.client.verifyIdToken({
             idToken: token,
-            audience: this.authParams.googleConfig.audience
+            audience: this.authParams.googleConfig.audience,
         })
-        const {given_name:name, sub:id, email} = ticket.getPayload()
+        const {given_name:name, sub:id, email, family_name: familyName, picture} = ticket.getPayload()
 
         req.user = await this.authParams.userService.findByGoogleToken(id)
             || await this.authParams.userService.findBySocialMediaToken("google", id)
             || await this.authParams.userService.findByEmail(email)
-            || await this.authParams.userService.create({email, username: name, google_token: id})
+            || await this.authParams.userService.create({
+                email,
+                username: name,
+                firstname: name,
+                lastname: familyName,
+                socialProfilePictureUrl: picture,
+                google_token: id})
 
         return true
     }
