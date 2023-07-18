@@ -16,9 +16,17 @@ export class FacebookAuthenticationGuard implements CanActivate {
             .get<any>(`https://graph.facebook.com/me?access_token=${token}&
                 fields=id,name,email,first_name,last_name,gender,picture`)
 
-        req.user = await this.authParams.userService.findBySocialMediaToken("facebook", data.id as string)
+        const existingUser = await this.authParams.userService.findBySocialMediaToken("facebook", data.id as string)
             || await this.authParams.userService.findByEmail(data.email)
-            || await this.authParams.userService.create({
+        if(existingUser) {
+            req.isNew = false;
+            req.user = existingUser;
+
+            return true;
+        }
+
+        req.isNew = true;
+        req.user = await this.authParams.userService.create({
                 email: data.email || "Unknown",
                 username: `user_${Math.floor(Math.random() * 99999)}`,
                 firstname: data.first_name || 'Unknown',

@@ -14,13 +14,21 @@ export class AppleAuthenticationStrategy extends PassportStrategy(AppleStrategy.
         super({...authParams.appleConfig, passReqToCallback: true})
     }
 
-    async validate<User>(req: Request, accessToken: string, refreshToken: string, profile: any): Promise<User> {
+    async validate<User>(req: any, accessToken: string, refreshToken: string, profile: any): Promise<User> {
         const {id, email} = profile
+
         if (!id) return Promise.reject("Apple jwt token does not contain the 'sub' field.")
-        return await this.authParams.userService.findByAppleToken(id as string)
+
+        const existingUser = await this.authParams.userService.findByAppleToken(id as string)
             || await this.authParams.userService.findBySocialMediaToken("apple", id as string)
             || await this.authParams.userService.findByEmail(email)
-            || await this.authParams.userService.create({
+        if(existingUser) {
+            req.user = existingUser;
+            req.isNew = false;
+        }
+        req.isNew = true;
+
+        return await this.authParams.userService.create({
                 email,
                 username: (req.body as any)?.userInfo?.name.given || 'Unknown',
                 apple_token: id,
