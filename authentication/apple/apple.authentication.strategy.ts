@@ -22,16 +22,12 @@ export class AppleAuthenticationStrategy extends PassportStrategy(AppleStrategy.
         const existingUser = await this.authParams.userService.findByAppleToken(id as string)
             || await this.authParams.userService.findBySocialMediaToken("apple", id as string)
             || await this.authParams.userService.findByEmail(email)
-        if(existingUser) {
-            req.user = existingUser;
-            req.isNew = false;
-        }
-        req.isNew = true;
+            || await this.authParams.userService.create({
+            email,
+            username: (req.body as any)?.userInfo?.name.given || 'Unknown',
+            apple_token: id,
+        })
 
-        return await this.authParams.userService.create({
-                email,
-                username: (req.body as any)?.userInfo?.name.given || 'Unknown',
-                apple_token: id,
-            })
+        return existingUser;
     }
 }

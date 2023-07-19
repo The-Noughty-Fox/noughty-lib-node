@@ -16,6 +16,7 @@ export class GoogleAuthenticationGuard implements CanActivate {
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const req = context.switchToHttp().getRequest()
+        req.redirected()
         const {token} = req.body
         if (!token)
             return Promise.reject(`Google authentication requires 'token' be sent in body`)
@@ -25,25 +26,17 @@ export class GoogleAuthenticationGuard implements CanActivate {
         })
         const {given_name:name, sub:id, email, family_name: familyName, picture} = ticket.getPayload()
 
-        const existingUser = await this.authParams.userService.findByGoogleToken(id)
+        req.user = await this.authParams.userService.findByGoogleToken(id)
             || await this.authParams.userService.findBySocialMediaToken("google", id)
             || await this.authParams.userService.findByEmail(email)
 
-        if(existingUser) {
-            req.user = existingUser;
-            req.isNew = false;
-
-            return true;
-        }
-        req.user = await this.authParams.userService.create({
+            await this.authParams.userService.create({
                 email,
                 username: name,
                 firstname: name,
                 lastname: familyName,
                 socialProfilePictureUrl: picture,
                 google_token: id})
-
-        req.isNew = true;
 
         return true
     }
