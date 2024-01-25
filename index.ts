@@ -1,3 +1,3 @@
-export * from './injectable.token'
-export * from './authentication'
+export * from './injectable.token.js'
+export * from './authentication/index.js'
 // export * from './authentication-interface'
