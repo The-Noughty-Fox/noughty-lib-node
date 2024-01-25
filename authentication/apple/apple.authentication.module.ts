@@ -1,6 +1,7 @@
-import {InjectableToken} from "../../injectable.token";
-import {AppleAuthenticationGuard} from "./apple.authentication.guard";
-import {Global, Module} from "@nestjs/common";
+import { Global, Module } from "@nestjs/common";
+import { InjectableToken } from "../../injectable.token.js";
+import { AppleAuthenticationGuard } from "./apple.authentication.guard.js";
+
 
 const appleGuard = {
     provide: InjectableToken.APPLE_GUARD,

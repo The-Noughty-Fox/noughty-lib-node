@@ -1,7 +1,8 @@
-import {ExecutionContext, Inject, Injectable} from "@nestjs/common";
-import {AuthGuard} from "@nestjs/passport";
-import {InjectableToken} from "../../injectable.token";
-import {AuthenticationParams} from "../authentication.module";
+import { Injectable, Inject, ExecutionContext } from "@nestjs/common"
+import { AuthGuard } from "@nestjs/passport"
+import { InjectableToken } from "../../injectable.token.js"
+import { AuthenticationParams } from "../authentication.module.js"
+
 
 @Injectable()
 export class AppleAuthenticationGuard extends AuthGuard('apple') {}

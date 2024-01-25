@@ -1,9 +1,8 @@
-import {Inject, Injectable} from "@nestjs/common";
-import {PassportStrategy} from "@nestjs/passport";
+import { Injectable, Inject } from "@nestjs/common";
+import { PassportStrategy } from "@nestjs/passport";
+import { InjectableToken } from "../../injectable.token.js";
+import { AuthenticationParams } from "../authentication.module.js";
 import * as AppleStrategy from "@nicokaiser/passport-apple";
-import {InjectableToken} from "../../injectable.token";
-import {AuthenticationParams} from "../authentication.module";
-
 
 @Injectable()
 export class AppleAuthenticationStrategy extends PassportStrategy(AppleStrategy.Strategy) {

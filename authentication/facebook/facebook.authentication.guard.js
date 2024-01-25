@@ -16,9 +16,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { Inject, Injectable } from "@nestjs/common";
-import { InjectableToken } from "../../injectable.token";
+import { Injectable, Inject } from "@nestjs/common";
 import axios from "axios";
+import { InjectableToken } from "../../injectable.token.js";
 let FacebookAuthenticationGuard = class FacebookAuthenticationGuard {
     constructor(authParams) {
         this.authParams = authParams;

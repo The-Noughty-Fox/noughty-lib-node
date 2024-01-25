@@ -16,9 +16,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { Inject, Injectable } from "@nestjs/common";
+import { Injectable, Inject } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
-import { InjectableToken } from "../../injectable.token";
+import { InjectableToken } from "../../injectable.token.js";
 let AppleAuthenticationGuard = class AppleAuthenticationGuard extends AuthGuard('apple') {
 };
 AppleAuthenticationGuard = __decorate([

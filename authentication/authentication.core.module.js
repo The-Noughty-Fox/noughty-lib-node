@@ -15,16 +15,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 var AuthenticationParamsModule_1, AuthenticationCoreModule_1;
 import { Global, Module } from "@nestjs/common";
-import { AuthenticationController } from "./authentication.controller";
-import { InjectableToken } from "../injectable.token";
 import { PassportModule } from "@nestjs/passport";
 import { CookieSessionModule } from "nestjs-cookie-session";
-import { AppleAuthenticationStrategy } from "./apple/apple.authentication.strategy";
-import { CookiesStrategy } from "./authentication.guard";
-import { AnonymousAppleAuthenticationGuard } from "./apple/apple.authentication.guard";
-import { AppleAuthenticationModule } from "./apple/apple.authentication.module";
-import { GoogleAuthenticationModule } from "./google/google.authentication.module";
-import { FacebookAuthenticationModule } from "./facebook/facebook.authentication.module";
+import { InjectableToken } from "../injectable.token.js";
+import { AnonymousAppleAuthenticationGuard } from "./apple/apple.authentication.guard.js";
+import { AppleAuthenticationModule } from "./apple/apple.authentication.module.js";
+import { AppleAuthenticationStrategy } from "./apple/apple.authentication.strategy.js";
+import { AuthenticationController } from "./authentication.controller.js";
+import { CookiesStrategy } from "./authentication.guard.js";
+import { FacebookAuthenticationModule } from "./facebook/facebook.authentication.module.js";
+import { GoogleAuthenticationModule } from "./google/google.authentication.module.js";
 class SIWAMiddleware {
     use(req, res, next) {
         const body = req.body;

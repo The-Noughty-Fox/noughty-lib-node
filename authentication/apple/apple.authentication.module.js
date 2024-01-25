@@ -4,9 +4,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { InjectableToken } from "../../injectable.token";
-import { AppleAuthenticationGuard } from "./apple.authentication.guard";
 import { Global, Module } from "@nestjs/common";
+import { InjectableToken } from "../../injectable.token.js";
+import { AppleAuthenticationGuard } from "./apple.authentication.guard.js";
 const appleGuard = {
     provide: InjectableToken.APPLE_GUARD,
     useClass: AppleAuthenticationGuard

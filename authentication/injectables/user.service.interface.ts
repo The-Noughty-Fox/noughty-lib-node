@@ -1,4 +1,4 @@
-import {CreateUserDto} from "../dto/createuser.dto";
+import { CreateUserDto } from "../dto/createuser.dto.js";
 
 export type AuthTokenType = "google" | "apple" | "facebook";
 

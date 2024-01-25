@@ -1,16 +1,17 @@
-import {DynamicModule, Global, MiddlewareConsumer, Module, NestMiddleware, RequestMethod} from "@nestjs/common";
-import {AuthenticationController} from "./authentication.controller";
-import {InjectableToken} from "../injectable.token";
-import {PassportModule} from "@nestjs/passport";
-import {CookieSessionModule, NestCookieSessionOptions} from "nestjs-cookie-session";
-import {AppleAuthenticationStrategy} from "./apple/apple.authentication.strategy";
-import {CookiesStrategy} from "./authentication.guard";
-import {AuthenticationOptions, AuthenticationParams} from "./authentication.module";
-import {Request, Response, NextFunction} from "express";
-import {AnonymousAppleAuthenticationGuard} from "./apple/apple.authentication.guard";
-import {AppleAuthenticationModule} from "./apple/apple.authentication.module";
-import {GoogleAuthenticationModule} from "./google/google.authentication.module";
-import {FacebookAuthenticationModule} from "./facebook/facebook.authentication.module";
+import { NestMiddleware, Global, Module, DynamicModule, MiddlewareConsumer } from "@nestjs/common";
+import { PassportModule } from "@nestjs/passport";
+import { NextFunction } from "express";
+import { CookieSessionModule, NestCookieSessionOptions } from "nestjs-cookie-session";
+import { InjectableToken } from "../injectable.token.js";
+import { AnonymousAppleAuthenticationGuard } from "./apple/apple.authentication.guard.js";
+import { AppleAuthenticationModule } from "./apple/apple.authentication.module.js";
+import { AppleAuthenticationStrategy } from "./apple/apple.authentication.strategy.js";
+import { AuthenticationController } from "./authentication.controller.js";
+import { CookiesStrategy } from "./authentication.guard.js";
+import { AuthenticationOptions, AuthenticationParams } from "./authentication.module.js";
+import { FacebookAuthenticationModule } from "./facebook/facebook.authentication.module.js";
+import { GoogleAuthenticationModule } from "./google/google.authentication.module.js";
+
 
 class SIWAMiddleware implements NestMiddleware {
     use(req: Request, res: Response, next: NextFunction) {

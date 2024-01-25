@@ -6,7 +6,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 var AuthenticationModule_1;
 import { Module } from "@nestjs/common";
-import { AuthenticationCoreModule } from "./authentication.core.module";
+import { AuthenticationCoreModule } from "./authentication.core.module.js";
 let AuthenticationModule = AuthenticationModule_1 = class AuthenticationModule {
     static forRootAsync(options, withController = false) {
         return {

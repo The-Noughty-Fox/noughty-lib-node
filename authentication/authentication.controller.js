@@ -16,11 +16,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { Controller, Post, UseGuards, Req, Inject } from "@nestjs/common";
-import { AnonymousAppleAuthenticationGuard } from "./apple/apple.authentication.guard";
-import { InjectableToken } from "../injectable.token";
-import { GoogleAuthenticationGuard } from "./google/google.authentication.guard";
-import { FacebookAuthenticationGuard } from "./facebook/facebook.authentication.guard";
+import { Controller, Inject, UseGuards, Post, Req } from "@nestjs/common";
+import { InjectableToken } from "../injectable.token.js";
+import { AnonymousAppleAuthenticationGuard } from "./apple/apple.authentication.guard.js";
+import { FacebookAuthenticationGuard } from "./facebook/facebook.authentication.guard.js";
+import { GoogleAuthenticationGuard } from "./google/google.authentication.guard.js";
 let AuthenticationController = class AuthenticationController {
     constructor(authParams) {
         this.authParams = authParams;

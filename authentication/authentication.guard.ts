@@ -2,8 +2,8 @@ import {AuthGuard, PassportStrategy} from "@nestjs/passport";
 import { ForbiddenException, Inject, Injectable, UnauthorizedException} from '@nestjs/common';
 import {Request} from "express";
 import {Strategy} from 'passport-custom';
-import {InjectableToken} from "../injectable.token";
-import {AuthenticationParams} from "./authentication.module";
+import { InjectableToken } from "../injectable.token.js";
+import { AuthenticationParams } from "./authentication.module.js";
 
 @Injectable()
 export class CookiesStrategy extends PassportStrategy(Strategy, 'cookies') {

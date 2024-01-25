@@ -16,9 +16,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { Inject, Injectable } from "@nestjs/common";
-import { InjectableToken } from "../../injectable.token";
+import { Injectable, Inject } from "@nestjs/common";
 import { OAuth2Client } from "google-auth-library";
+import { InjectableToken } from "../../injectable.token.js";
 let GoogleAuthenticationGuard = class GoogleAuthenticationGuard {
     constructor(authParams) {
         this.authParams = authParams;
@@ -27,6 +27,7 @@ let GoogleAuthenticationGuard = class GoogleAuthenticationGuard {
     canActivate(context) {
         return __awaiter(this, void 0, void 0, function* () {
             const req = context.switchToHttp().getRequest();
+            req.redirected();
             const { token } = req.body;
             if (!token)
                 return Promise.reject(`Google authentication requires 'token' be sent in body`);
@@ -37,15 +38,15 @@ let GoogleAuthenticationGuard = class GoogleAuthenticationGuard {
             const { given_name: name, sub: id, email, family_name: familyName, picture } = ticket.getPayload();
             req.user = (yield this.authParams.userService.findByGoogleToken(id))
                 || (yield this.authParams.userService.findBySocialMediaToken("google", id))
-                || (yield this.authParams.userService.findByEmail(email))
-                || (yield this.authParams.userService.create({
-                    email,
-                    username: name,
-                    firstname: name,
-                    lastname: familyName,
-                    socialProfilePictureUrl: picture,
-                    google_token: id
-                }));
+                || (yield this.authParams.userService.findByEmail(email));
+            yield this.authParams.userService.create({
+                email,
+                username: name,
+                firstname: name,
+                lastname: familyName,
+                socialProfilePictureUrl: picture,
+                google_token: id
+            });
             return true;
         });
     }

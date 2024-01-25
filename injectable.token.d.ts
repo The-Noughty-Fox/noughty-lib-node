@@ -1,4 +1,6 @@
 export declare class InjectableToken {
-    static USER_SERVICE: string;
-    static APPLE_CONFIG: string;
+    static AUTH_PARAMS: symbol;
+    static APPLE_GUARD: symbol;
+    static GOOGLE_GUARD: symbol;
+    static FACEBOOK_GUARD: symbol;
 }

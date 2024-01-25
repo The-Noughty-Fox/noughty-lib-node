@@ -1,6 +1,7 @@
-import {InjectableToken} from "../../injectable.token";
-import {GoogleAuthenticationGuard} from "./google.authentication.guard";
-import {Global, Module} from "@nestjs/common";
+import { Global, Module } from "@nestjs/common";
+import { InjectableToken } from "../../injectable.token.js";
+import { GoogleAuthenticationGuard } from "./google.authentication.guard.js";
+
 
 const googleGuard = {
     provide: InjectableToken.GOOGLE_GUARD,

@@ -16,10 +16,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { Inject, Injectable } from "@nestjs/common";
+import { Injectable, Inject } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
+import { InjectableToken } from "../../injectable.token.js";
 import * as AppleStrategy from "@nicokaiser/passport-apple";
-import { InjectableToken } from "../../injectable.token";
 let AppleAuthenticationStrategy = class AppleAuthenticationStrategy extends PassportStrategy(AppleStrategy.Strategy) {
     constructor(authParams) {
         super(Object.assign(Object.assign({}, authParams.appleConfig), { passReqToCallback: true }));
@@ -31,7 +31,7 @@ let AppleAuthenticationStrategy = class AppleAuthenticationStrategy extends Pass
             const { id, email } = profile;
             if (!id)
                 return Promise.reject("Apple jwt token does not contain the 'sub' field.");
-            return (yield this.authParams.userService.findByAppleToken(id))
+            const existingUser = (yield this.authParams.userService.findByAppleToken(id))
                 || (yield this.authParams.userService.findBySocialMediaToken("apple", id))
                 || (yield this.authParams.userService.findByEmail(email))
                 || (yield this.authParams.userService.create({
@@ -39,6 +39,7 @@ let AppleAuthenticationStrategy = class AppleAuthenticationStrategy extends Pass
                     username: ((_b = (_a = req.body) === null || _a === void 0 ? void 0 : _a.userInfo) === null || _b === void 0 ? void 0 : _b.name.given) || 'Unknown',
                     apple_token: id,
                 }));
+            return existingUser;
         });
     }
 };

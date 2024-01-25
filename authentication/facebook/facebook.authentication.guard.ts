@@ -1,7 +1,8 @@
-import {CanActivate, ExecutionContext, Inject, Injectable} from "@nestjs/common";
-import {InjectableToken} from "../../injectable.token";
-import {AuthenticationParams} from "../authentication.module";
+import { Injectable, CanActivate, Inject, ExecutionContext } from "@nestjs/common";
 import axios from "axios";
+import { InjectableToken } from "../../injectable.token.js";
+import { AuthenticationParams } from "../authentication.module.js";
+
 
 @Injectable()
 export class FacebookAuthenticationGuard implements CanActivate {

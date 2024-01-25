@@ -19,7 +19,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { AuthGuard, PassportStrategy } from "@nestjs/passport";
 import { ForbiddenException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Strategy } from 'passport-custom';
-import { InjectableToken } from "../injectable.token";
+import { InjectableToken } from "../injectable.token.js";
 let CookiesStrategy = class CookiesStrategy extends PassportStrategy(Strategy, 'cookies') {
     constructor(authParams) {
         super();
